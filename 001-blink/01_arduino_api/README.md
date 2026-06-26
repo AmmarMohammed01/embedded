@@ -1,0 +1,6 @@
+- Use Arduino IDE to program the microcontroller.
+- Made use of Arduino .ino sketches.
+- Used setup() and loop() functions.
+- Used pinMode() and digitalWrite() to interface the on-board LED.
+- Used macros to define pin number and delay time
+- Used enum to clarify LED is connected as an Active High component rather than Active Low
