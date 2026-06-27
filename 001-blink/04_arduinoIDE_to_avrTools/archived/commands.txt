@@ -1,0 +1,105 @@
+COMMAND:
+~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/bin/avr-gcc \
+-mmcu=atmega328p \
+-DF_CPU=16000000UL \
+-Os \
+-o blink.elf \
+blink.c
+
+file blink.elf
+
+OUTPUT:
+blink.elf: ELF 32-bit LSB executable, Atmel AVR 8-bit, version 1 (SYSV), statically linked, with debug_info, not stripped
+
+---
+COMMAND:
+~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/bin/avr-size blink.elf
+
+OUTPUT:
+text	   data	    bss	    dec	    hex	filename
+258	      0	      0	    258	    102	blink.elf
+
+---
+COMMAND:
+~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/bin/avr-objdump -d blink.elf
+
+OUTPUT:
+Saved in file blink-objdump.txt
+
+
+COMMAND:
+~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/bin/avr-objdump -h blink.elf
+
+OUTPUT:
+Saved in file blink-objdump-headers.txt
+
+---
+COMMAND:
+~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/bin/avr-objcopy \
+-O ihex \
+-R .eeprom \
+blink.elf \
+blink.hex
+
+---
+COMMAND:
+~/Library/Arduino15/packages/arduino/tools/avrdude/6.3.0-arduino17/bin/avrdude \
+-c arduino \
+-p atmega328p \
+-P /dev/cu.usbmodem1101 \
+-b115200 \
+-U flash:w:blink.hex:i
+
+OUTPUT ERROR:
+avrdude: can't open config file "/Users/jenkins/jenkins/workspace/avrdude-staging/label/mac-mini/objdir/etc/avrdude.conf": No such file or directory
+avrdude: error reading system wide configuration file "/Users/jenkins/jenkins/workspace/avrdude-staging/label/mac-mini/objdir/etc/avrdude.conf"
+
+COMMAND RETRY:
+~/Library/Arduino15/packages/arduino/tools/avrdude/6.3.0-arduino17/bin/avrdude \
+-C ~/Library/Arduino15/packages/arduino/tools/avrdude/6.3.0-arduino17/etc/avrdude.conf \
+-c arduino \
+-p atmega328p \
+-P /dev/cu.usbmodem1101 \
+-b115200 \
+-U flash:w:blink.hex:i
+
+OUTPUT:
+avrdude: AVR device initialized and ready to accept instructions
+
+Reading | ################################################## | 100% 0.00s
+
+avrdude: Device signature = 0x1e950f (probably m328p)
+avrdude: NOTE: "flash" memory has been specified, an erase cycle will be performed
+         To disable this feature, specify the -D option.
+avrdude: erasing chip
+avrdude: reading input file "blink.hex"
+avrdude: writing flash (258 bytes):
+
+Writing | ################################################## | 100% 0.06s
+
+avrdude: 258 bytes of flash written
+avrdude: verifying flash memory against blink.hex:
+avrdude: load data flash data from input file blink.hex:
+avrdude: input file blink.hex contains 258 bytes
+avrdude: reading on-chip flash data:
+
+Reading | ################################################## | 100% 0.05s
+
+avrdude: verifying ...
+avrdude: 258 bytes of flash verified
+
+avrdude: safemode: Fuses OK (E:00, H:00, L:00)
+
+avrdude done.  Thank you.
+
+---
+Usual avrdude command from Arduino IDE
+"~/Library/Arduino15/packages/arduino/tools/avrdude/6.3.0-arduino17/bin/avrdude" \
+"-C~/Library/Arduino15/packages/arduino/tools/avrdude/6.3.0-arduino17/etc/avrdude.conf" \
+-v -V \
+-patmega328p \
+-carduino \
+"-P/dev/cu.usbmodem1101" \
+-b115200 \
+-D \
+"-Uflash:w:/private/var/folders/mb/p8pwv9r51r75mxfjskfw465w0000gn/T/arduino/sketches/2F0EEDF471FBCA41C3B6BD75AF7E2F22/Blink2.ino.hex:i"
