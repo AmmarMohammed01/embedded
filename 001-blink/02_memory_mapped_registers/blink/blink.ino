@@ -1,7 +1,7 @@
 /*
 Author: Ammar Mohammed
 Date: 2026-06-26
-Program: Blink using Arduino APIs
+Program: Blink w/ Memory Mapped Registers
 
 Board: Arduino AVR Boards > Arduino Uno
 Physical Board: Arduino Uno R3

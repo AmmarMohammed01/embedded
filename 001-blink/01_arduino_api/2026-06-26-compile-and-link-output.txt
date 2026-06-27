@@ -1,4 +1,3 @@
-
 FQBN: arduino:avr:uno
 Using board 'uno' from platform in folder: /Users/username/Library/Arduino15/packages/arduino/hardware/avr/1.8.6
 Using core 'arduino' from platform in folder: /Users/username/Library/Arduino15/packages/arduino/hardware/avr/1.8.6
