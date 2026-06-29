@@ -1,6 +1,11 @@
 # Project 002 - Button & LED
 ## About
 This project explores how to receive input via GPIO pins without using the Arduino libraries.
+- Learned about reading Input on ATmega328p by reading datasheet pages 58-60.
+- Used AVR IO header file for the first time.
+- Created drivers for LED and Button.
+- Learned about how Makefiles are able to generate newer object code for changed source code
+    - (performs check to see whether object code is still newer than source code)
 
 ## Project Structure:
 src/
@@ -11,6 +16,8 @@ include/
 
 build/
 - Contains object files (*.o files)
+- Contains *.elf
+- Contains *.hex
 - Useful in development if changes are only made to some source code files while others remain unchanged, which can decrease build time as projects get larger
 
 Makefile
@@ -93,3 +100,5 @@ led.h
 src/:
 led.c  main.c
 ```
+
+Atmel Page 59 and 60

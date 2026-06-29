@@ -16,7 +16,7 @@ CPPFLAGS = -Iinclude
 CFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU) -Os
 OBJFLAGS = -O ihex -R .eeprom
 
-SRC = src/main.c src/led.c
+SRC = src/main.c src/led.c src/button.c
 # OBJ = $(SRC:.c=.o)
 OBJ = $(patsubst src/%.c,build/%.o,$(SRC))
 
@@ -38,4 +38,4 @@ flash: build/program.hex
 	$(AVRDUDE) -C $(CONF) -c arduino -p $(MCU) -P $(PORT) -b115200 -U flash:w:$<:i
 
 clean:
-	rm build/*.elf build/*.hex
+	rm build/* # rm build/*.elf build/*.hex
