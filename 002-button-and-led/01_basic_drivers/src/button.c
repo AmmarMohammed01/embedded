@@ -24,7 +24,7 @@ unsigned char
 0000 0100 & (Checking for PIN 2)
 0000 0100 = (Result if PIN 2 is high)
 
-1000 0100   (Example read state from PORTD)
+1000 0000   (Example read state from PORTD)
 0000 0100 & (Checking for PIN 2)
 0000 0000 = (Result if PIN 2 is low)
 */

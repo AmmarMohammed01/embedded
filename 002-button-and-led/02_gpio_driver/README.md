@@ -1,6 +1,11 @@
 # Project 002 - Button & LED
 ## About
 This project explores how to receive input via GPIO pins without using the Arduino libraries.
+- Learned about reading Input on ATmega328p by reading datasheet pages 58-60.
+- Used AVR IO header file for the first time.
+- Created drivers for LED and Button.
+- Learned about how Makefiles are able to generate newer object code for changed source code
+    - (performs check to see whether object code is still newer than source code)
 
 ## Project Structure:
 src/
@@ -11,10 +16,15 @@ include/
 
 build/
 - Contains object files (*.o files)
+- Contains *.elf
+- Contains *.hex
 - Useful in development if changes are only made to some source code files while others remain unchanged, which can decrease build time as projects get larger
 
 Makefile
 - Contains compiler commands and setting to run and clean work environment
+
+## UPDATES
+button.c and led.c drivers now use gpio.c
 
 ## Notes
 Trying to use avr/io header file for the first time.
@@ -38,3 +48,60 @@ the hex number matches the address in the datasheet when refering to the I/O mem
 
 Another thing I found io.h includes sfr_defs.h
 _SFR_IO8 is defined as a macro that adds the io address passed to the offset of 0x20 (same as in datasheet).
+
+## Makefile Results
+```bash
+>> ls */
+build/:
+
+include/:
+led.h
+
+src/:
+led.c  main.c
+
+>> make
+~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/bin/avr-gcc -Iinclude -mmcu=atmega328p -DF_CPU=16000000UL -Os -c src/main.c -o build/main.o
+~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/bin/avr-gcc -Iinclude -mmcu=atmega328p -DF_CPU=16000000UL -Os -c src/led.c -o build/led.o
+~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/bin/avr-gcc -mmcu=atmega328p -DF_CPU=16000000UL -Os build/main.o build/led.o -o build/program.elf
+~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/bin/avr-objcopy -O ihex -R .eeprom build/program.elf build/program.hex
+
+>> ls */
+build/:
+led.o       main.o      program.elf program.hex
+
+include/:
+led.h
+
+src/:
+led.c  main.c
+
+>> make clean
+rm build/*.elf build/*.hex
+
+>> ls */
+build/:
+led.o  main.o
+
+include/:
+led.h
+
+src/:
+led.c  main.c
+
+>> make
+~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/bin/avr-gcc -mmcu=atmega328p -DF_CPU=16000000UL -Os build/main.o build/led.o -o build/program.elf
+~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/bin/avr-objcopy -O ihex -R .eeprom build/program.elf build/program.hex
+
+>> ls */
+build/:
+led.o       main.o      program.elf program.hex
+
+include/:
+led.h
+
+src/:
+led.c  main.c
+```
+
+Atmel Page 59 and 60

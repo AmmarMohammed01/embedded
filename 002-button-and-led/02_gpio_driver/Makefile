@@ -11,20 +11,26 @@ CONF =    $(AVRDUDE_PATH)/etc/avrdude.conf
 
 PORT = /dev/cu.usbmodem1101
 
+CPPFLAGS = -Iinclude
 CFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU) -Os
 OBJFLAGS = -O ihex -R .eeprom
 
-all: blink.hex
+SRC = src/main.c src/led.c src/button.c src/gpio.c
+OBJ = $(patsubst src/%.c,build/%.o,$(SRC))
 
-blink.elf: blink.c  # target: prereq1 prereq2
-	# $(CC) $(CFLAGS) -o blink.elf blink.c
-	$(CC) $(CFLAGS) -o $@ $< # the @ means target, < means prereq1
+all: build/program.hex
 
-blink.hex: blink.elf
+build/program.elf: $(OBJ)
+	$(CC) $(CFLAGS) $^ -o $@
+
+build/%.o: src/%.c
+	$(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+build/program.hex: build/program.elf
 	$(OBJCOPY) $(OBJFLAGS) $< $@
 
-flash: blink.hex
-	$(AVRDUDE) -C $(CONF) -c arduino -p $(MCU) -P $(PORT) -b115200 -U flash:w:blink.hex:i
+flash: build/program.hex
+	$(AVRDUDE) -C $(CONF) -c arduino -p $(MCU) -P $(PORT) -b115200 -U flash:w:$<:i
 
 clean:
-	rm *.elf *.hex
+	rm build/*

@@ -12,6 +12,7 @@ CONF =    $(AVRDUDE_PATH)/etc/avrdude.conf
 
 PORT = /dev/cu.usbmodem1101
 
+#CPP stands for C Preprocessor
 CPPFLAGS = -Iinclude
 CFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU) -Os
 OBJFLAGS = -O ihex -R .eeprom
