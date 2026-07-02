@@ -1,3 +1,7 @@
+/*
+Author: Ammar Mohammed
+Date: 2026-06-30
+*/
 #include "gpio.h"
 #include <avr/io.h>
 
