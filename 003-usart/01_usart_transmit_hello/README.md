@@ -1,68 +1,143 @@
-# Project 003: USART
-USART stands for Universal Synchronous and Asynchronous Serial Receiver and Transmitter.
+# USART Driver (ATmega328P)
 
-## Documentation
-ATmega328p Section 19, Page 143.
+A simple bare-metal USART driver written in C for the ATmega328P.
 
-Page 144 - Diagram of USART components
-Transimitter
-- DATABUS to UDRn (Transmit)
-- XCKn to Pin Control to Sync Logic to Mux leading to Transmit Shift Register
-- TxDn, output of transmitter
+This project initializes the USART peripheral and demonstrates transmitting data over a serial connection without using the Arduino framework.
 
-USART supports 4 modes of clock operations:
-- normal asynchronous
-- double speed asynchronous
-- master synchronous
-- slave synchronous
+---
 
-^ I want to learn about the asynchronous mode(s) first
-UMSELn ?and status register C (UCSRnC)? selects between asynchronous and synchronous (1 is sync, 0 probably asynchronous)
+## Features
 
-Page 145 - Clock Generation Logic, Block Diagram
-- Shows UMSELn
-- Shows U2Xn
-- Shows Muxes
-- Talks about Baud rate     //? baud meaning
+- USART initialization
+- Configurable baud rate
+- Character transmission
+<!--- Character reception-->
+- Blocking driver implementation
 
-Page 146
-- Chart showing Baud Rate setting choice based on 4 modes of clock operation @ page 144
+---
 
-Page 147 - Frame Formats
-- Frame is how data is formated
-- Start bit
-- Data: LSB to MSB
-- Optional parity bit   //? parity bit meaning
-- Stop bit
+## Hardware
 
-- Okay on communication line, start bit is low, end bit is high (aka IDLE)
-- After frame completes: follow with new frame, or leave communication line IDLE
+- Arduino Uno R3
+    - ATmega328P
+    - USB-to-Serial adapter
+    - 16 MHz clock
+<!-- - Breadboard -->
 
-Page 148
-- Tells what registers to use for frame format
-    - UCSZn2:0 : Select num of data bits in frame
-    - UPMn1:0  : Enable and set the type of parity bit
-    - USBSn    : Selection between one or two stop bits
-- Parity bit calculation
-- USART Initialization
-    - set baud rate
-    - set frame format
-    - enable transmitter or receiver depending on usage
+---
 
-Page 149 - USART Init code
+## Project Structure
 
-Page 150 - USART Data Transmission code
+```
 
-Page 159 - Register Description
+.
+|- src/
+|  |- main.c
+|  |- usart.c
+|
+|- include/
+|  |- usart.h
+|
+|- Makefile
+|- README.md
 
-## How to View Bits Transmitted by ATmega328p
-I am using a MacBook with iTerm2.
-Recommendation is to use "screen" terminal command.
+```
 
-First check if device is available after plugging in Arduino Uno R3 board.
+### Generated During Build
+
+```text
+
+build/
+|- main.o
+|- usart.o
+|- program.elf
+|- program.hex
+
+```
+
+---
+
+## How it Works
+
+The driver configures:
+
+- Baud rate registers (UBRR0H/UBRR0L)
+- Enables transmitter <!-- and receiver -->
+- Configures 8-bit data format
+- Uses polling for transmission <!-- and reception -->
+
+Transmission waits until the transmit buffer is empty before writing a byte to UDR0.
+
+<!-- Reception waits until data is available before reading UDR0. -->
+
+---
+
+## Build
+
+```bash
+make
+````
+
+Flash:
+
+```bash
+make flash
+```
+
+---
+
+## Example
+
+```c
+usart_init(MYUBRR);
+
+while (1)
+{
+    usart_transmit('A');
+}
+```
+
+---
+
+## Future Improvements
+
+* Interrupt-driven USART
+* Ring buffer
+* Non-blocking API
+* Configurable parity and stop bits
+
+---
+
+## References
+
+* ATmega328P Datasheet
+
+<!-- ## Breadboard Setup
+
+![Breadboard](docs/breadboard.jpg) -->
+
+## Serial Output
+
+```bash
+# check name device is available as
 ls /dev/cu.*
-One of the results should be /dev/cu.usbmodem1101
 
-Then to see output use the 'screen' command.
+# screen device baud-rate
 screen /dev/cu.usbmodem1101 9600
+```
 
+![Serial Monitor](docs/serial_monitor.png)
+
+## What I Learned
+
+- How baud rate registers are calculated
+- Difference between polling and interrupts
+- How the AVR USART hardware works
+- Register-level peripheral configuration
+
+## Limitations
+
+- Blocking transmit/receive
+- No error handling
+- No interrupt support
+- Fixed baud rate

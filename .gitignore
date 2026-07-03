@@ -1,0 +1,19 @@
+# Build directories
+build/
+
+# Object files
+*.o
+*.d
+
+# AVR binaries
+*.hex
+*.elf
+*.eep
+*.map
+*.lst
+
+# Editor files
+.vscode/
+
+# macOS
+.DS_Store
