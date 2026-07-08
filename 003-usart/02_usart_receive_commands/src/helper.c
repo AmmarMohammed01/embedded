@@ -13,7 +13,7 @@ void printPhrase(char* message, unsigned int msgLength) {
 
 void interpret() {
 	unsigned int index = 0;
-	char input[10];
+	char input[8];
 	char current = ' ';
 	while(current != '\r') {
 		current = usart_receive();
@@ -21,6 +21,8 @@ void interpret() {
 		input[index] = current;
 		index++;
 	}
+	input[index-1] = '\0';
+	usart_transmit(index+48);
 
 	//if message == "LED ON", then ON LED
 	if(strcmp("LED ON", input) == 0) {
@@ -35,6 +37,13 @@ void interpret() {
 	//else return an error message
 	else {
 		printPhrase("Invalid Input", 14);
-		printPhrase(input, 10);
+		//printPhrase(input, 10);
+		for(int i = 0; i < 8; i++) {
+			usart_transmit(i+48);
+			usart_transmit(':');
+			usart_transmit(input[i]);
+			usart_transmit('\n');
+			usart_transmit('\r');
+		}
 	}
 }
