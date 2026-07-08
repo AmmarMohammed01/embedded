@@ -7,7 +7,7 @@ void usart_init(unsigned int ubrr) {
 	UBRR0L = (unsigned char) ubrr;
 	/*Enable receiver and transmitter*/
 	UCSR0B = (1 << RXEN0) | (1 << TXEN0);
-	/*Set frame format: 8data, 2stop bit*/
+	/*Set frame format: 8-bit char data, 2 stop bits*/
 	UCSR0C = (1<<USBS0) | (3<<UCSZ00);
 }
 
