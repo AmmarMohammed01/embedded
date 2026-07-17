@@ -41,6 +41,7 @@ void interpret() {
 		printPhrase("Invalid Input", 14);
 	}
 
+	//print the contents of input[]
 	for(int i = 0; i < 8; i++) {
 		usart_transmit(i+48); //index
 		usart_transmit(':');
@@ -62,10 +63,7 @@ void printMemory(char * charByte) {
 	//If 01001100 is printed w/ transmit, it appears as letter
 	//So I need to take the binary and convert the decimal number to a string form
 
-	//
 	unsigned int num = *charByte;
 	usart_transmit((num / 10)+48);
 	usart_transmit((num % 10)+48);
-	//usart_transmit('\r');
-	//usart_transmit('\n');
 }

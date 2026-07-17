@@ -17,3 +17,5 @@ One of the results should be /dev/cu.usbmodem1101
 Then to see output use the 'screen' command.
 screen /dev/cu.usbmodem1101 9600
 
+To exit screen:
+CTRL-A KY
