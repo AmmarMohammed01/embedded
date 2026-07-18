@@ -1,3 +1,4 @@
+/*Ammar Mohammed, 2026-07-17, External Interrupt*/
 #ifndef __INTERRUPT_H__
 #define __INTERRUPT_H__
 #include <avr/interrupt.h>
@@ -10,5 +11,4 @@ typedef enum {
 } interrupt_sense_control_t;
 
 void interrupt_init();
-void interrupt_enable();
 #endif

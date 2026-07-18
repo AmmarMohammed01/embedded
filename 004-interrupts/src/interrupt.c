@@ -1,3 +1,4 @@
+/*Ammar Mohammed, 2026-07-17, External Interrupt*/
 #include "interrupt.h"
 
 void interrupt_init() {
@@ -10,5 +11,3 @@ void interrupt_init() {
 	EIMSK |= (1 << INT1) | (1 << INT0); //enable external interrupts for both INT1 and INT0
 
 }
-
-void interrupt_enable();
