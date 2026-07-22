@@ -46,7 +46,10 @@ avr/iom328p.h
     - OCF1A: Can also be cleared by writing logic 1 to its bit location.
 
 15.11.4 TCNT1H and TCNT1L, Timer/CouNTer1 HIGH & LOW (value)
+- Contains current value of running counter
+
 15.11.5 OCR1AH and OCR1AL, Output Compare Register 1 A
+- Contains the values to compare to counter
 
 15.11.8 TIMSK1 – Timer/Counter1 Interrupt Mask Register
 - Enable Overflow Interrupt
