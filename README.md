@@ -18,9 +18,13 @@ Peripherals/Concepts explored: GPIO, UART, Interrupts, Timers, ADC.
 - 2026-07-02
 
 ### 004-interrupts
-- 2026-07-17: External Interrupt
+- 2026-07-17: External Interrupt.
 
 ### 005-timers
+- 2026-07-18: Blink an LED each second using 16-bit Timer/Counter1 w/ overflow interrupt and no prescaling.
+- 2026-07-21: Blink an LED each second using 16-bit Timer/Counter1 w/ compare match interrupt w/ 1024 divisor prescaling.
+- 2026-07-21: Blink an LED every 250ms using 16-bit Timer/Counter1 w/ compare match interrupt w/ 256 divisor prescaling.
+- 2026-07-22: Blink an LED every 250ms using 16-bit Timer/Counter1 w/ compare match w/ 256 prescaler & CTC
 
 ### 006-adc
 - Started 2026-07-16.
