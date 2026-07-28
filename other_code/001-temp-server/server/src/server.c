@@ -1,5 +1,5 @@
 #include <sys/types.h>
-#include <sys/socket.h> //getaddrinfo(), AF_INET6
+#include <sys/socket.h> //getaddrinfo(), AF_INET6, socket(), bind(), listen(), accept()
 #include <netdb.h> //struct addrinfo
 #include <string.h> //memset
 #include <stdio.h> //fprintf()
@@ -8,6 +8,8 @@
 #include <unistd.h> //close()
 
 #include "helper.h"
+
+#define BACKLOG 5 // # of connections to this server's socket
 
 int main() {
 	//setup IP and PORT to listen on getaddrinfo, struct addrinfo
@@ -43,9 +45,16 @@ int main() {
 
 	bind(sockfd, servinfo->ai_addr, servinfo->ai_addrlen); //bind a port, passing in sockaddr_in which includes sin_port
 
-	while(1) {
+	//listen to incoming connections, BACKLOG is # of connections that wait in a queue until accept()
+	listen(sockfd, BACKLOG);
 
-	}
+	//accept an incoming connection
+	int new_sockfd;
+	struct sockaddr_storage incoming_addr;
+	socklen_t incoming_addr_size = sizeof incoming_addr;
+	new_sockfd = accept(sockfd, (struct sockaddr*)&incoming_addr, &incoming_addr_size);
+	printf("new_sockfd: %d\n", new_sockfd);
+
 	close(sockfd); //close socket
 
 	freeaddrinfo(servinfo); //free dynamically allocated mem for servinfo

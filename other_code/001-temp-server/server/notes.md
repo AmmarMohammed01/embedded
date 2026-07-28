@@ -137,3 +137,10 @@ Got file descriptor using socket():
 
 Binding a port to our socket, so later server knows where to listen
 - man 2 bind
+- passing addrinfo's field storing struct sockaddr, which can be struct sockaddr_in, containing ip address and port
+
+Allow the server port to open, listen to incoming connections, place them in queue until server ready to accept()
+- man listen
+- pass socket file descriptor and # of backlog for queue
+
+
