@@ -1,7 +1,7 @@
 #include <sys/types.h>
 #include <sys/socket.h> //getaddrinfo(), AF_INET6, socket(), bind(), listen(), accept()
 #include <netdb.h> //struct addrinfo
-#include <string.h> //memset
+#include <string.h> //memset(), strlen()
 #include <stdio.h> //fprintf()
 #include <stdlib.h> //exit()
 #include <arpa/inet.h> //inet_ntop()
@@ -58,6 +58,12 @@ int main() {
 	close(sockfd); //close socket
 
 	freeaddrinfo(servinfo); //free dynamically allocated mem for servinfo
+
+	//send messages
+	char * msg = "Hi there! My name is Server."; //28B w/o '\0'
+	int msg_len, bytesSent;
+	msg_len = strlen(msg);
+	bytesSent = send(new_sockfd, msg, msg_len, 0);
 
 	return 0;
 }
