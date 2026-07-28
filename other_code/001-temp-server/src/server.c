@@ -5,6 +5,7 @@
 #include <stdio.h> //fprintf()
 #include <stdlib.h> //exit()
 #include <arpa/inet.h> //inet_ntop()
+#include <unistd.h> //close()
 
 #include "helper.h"
 
@@ -24,6 +25,7 @@ int main() {
 		exit(1);
 	}
 
+	/*
 	printf("Printing struct addrinfo: hints\n");
 	printf("-------------------------------\n");
 	print_addrinfo(&hints);
@@ -31,6 +33,17 @@ int main() {
 	printf("Printing struct addrinfo: servinfo\n");
 	printf("----------------------------------\n");
 	print_addrinfo(servinfo);
+	*/
+
+	//create a socket file descriptor, socket(domain, type, protocol)
+	//should not return -1
+	//int socket_d = socket(PF_INET, SOCK_STREAM, 6); //6 for tcp
+	int socket_d = socket(servinfo->ai_family, servinfo->ai_socktype, servinfo->ai_protocol); //open socket
+	printf("socket_d: %d\n", socket_d);
+
+	close(socket_d); //close socket
+
+	freeaddrinfo(servinfo); //free dynamically allocated mem for servinfo
 
 	return 0;
 }
