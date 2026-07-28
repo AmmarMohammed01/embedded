@@ -25,3 +25,12 @@ lldb list 10 # lists out code snippet at line 10 and below
 
 lldb gui # launches gui
 ```
+
+See the port running on MacOS:
+```bash
+lsof -iTCP:3490
+
+#or
+
+netstat -an | grep 3490
+```

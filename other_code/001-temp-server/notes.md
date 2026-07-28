@@ -130,3 +130,10 @@ Found in man printf, format section.
 
 PORT Numbers
 /etc/services
+
+Got file descriptor using socket():
+- man socket
+- Passed in servinfo address information
+
+Binding a port to our socket, so later server knows where to listen
+- man 2 bind

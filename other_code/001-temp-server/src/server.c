@@ -37,11 +37,16 @@ int main() {
 
 	//create a socket file descriptor, socket(domain, type, protocol)
 	//should not return -1
-	//int socket_d = socket(PF_INET, SOCK_STREAM, 6); //6 for tcp
-	int socket_d = socket(servinfo->ai_family, servinfo->ai_socktype, servinfo->ai_protocol); //open socket
-	printf("socket_d: %d\n", socket_d);
+	//int sockfd = socket(PF_INET, SOCK_STREAM, 6); //6 for tcp
+	int sockfd = socket(servinfo->ai_family, servinfo->ai_socktype, servinfo->ai_protocol); //open socket
+	printf("sockfd: %d\n", sockfd);
 
-	close(socket_d); //close socket
+	bind(sockfd, servinfo->ai_addr, servinfo->ai_addrlen); //bind a port, passing in sockaddr_in which includes sin_port
+
+	while(1) {
+
+	}
+	close(sockfd); //close socket
 
 	freeaddrinfo(servinfo); //free dynamically allocated mem for servinfo
 
