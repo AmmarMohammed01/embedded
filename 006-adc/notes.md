@@ -76,3 +76,56 @@ Reading page 217-220: 23.9 Register Description (for ADC)
 - only use Bit 5:0 for ADC5D:ADC0D
 - *set to logic 1* to disable digital input buffer on corresponding ADC pin
 - it reduces power consumption during analog signal input, as it won't write to digital input buffer
+
+
+## 2026-07-30 Notes
+
+### General Idea of ADC
+
+First have a good understanding how ADC, analog to digital conversion, works in general.
+
+The input is raw voltage values. "Analog" input to my understanding is refering to the voltage level.
+
+The voltage input, I have to check, can range from 0V to 5V.
+
+These values can be transferred to "digital" values of 0 to 1023. The 0 to 1023 comes from the 10-bit resolution.
+2 ^ 10 = 1024 values.
+
+### Arduino ADC Setup
+
+One thing that will help me understand ADC is taking a look at what the Arduino Uno R3 already does.
+I should take a look at what is connected to the analog voltage pins on the ATmega328p according to the Arduino Uno R3 circuit schematic.
+
+#### Analog Pins on the ADC
+
+(Page 4 - Pin Descriptions)
+- AREF
+    - On Arduino, there is an empty pin for a wire to attach to Uno board for this. I have not used this in the past.
+- AVCC
+    - connected through an 10uH inductor to 5V. other side is connected to 100nF capacitor leading to GND.
+- AGND
+    - On Arduino, actual GND connects to the GND port on pin header and the AGND port on the ATmega328p. (not exposed to users of Uno R3).
+
+PORTC (Page 68)
+- ADC5; ADC input channel 5; PC5
+- ADC4; PC4
+- ADC3; PC3
+- ADC2; PC2
+- ADC1; PC1
+- ADC0; PC0
+
+PORTD (Page 70)
+- AIN1; analog comparator negative input; PD7
+- AIN0; analog comparator positive input; PD6
+
+Page 206 - Analog to Digital Converter Block Schematic Operation
+
+
+### Extra Info
+
+If I recall, the ATmega328p has an option to set ADC resolutions to 8-bit or 9-bit.
+This results in 2^8 = 256 and 2^9 = 512 values respectively.
+
+## Notes 2026-08-04
+
+Worked on helper.c. Was able to create a working intToString() and reverseString().

@@ -34,3 +34,6 @@ flash: build/program.hex
 
 clean:
 	rm build/*
+
+my_test: test/test.c src/helper.c
+	clang -g -Iinclude test/test.c src/helper.c -o build/outTest
