@@ -33,6 +33,8 @@ Peripherals/Concepts explored: GPIO, UART, Interrupts, Timers, ADC.
 ### 006-adc
 - Started 2026-07-16.
 - Paused 2026-07-17, learn interrupts and timers first.
+- 2026-07-30: Resume learning about ADC.
+- 2026-08-04/05: Successfully print ADC value.
 
 Potential future topics: I2C, SPI, Bootloader, sleep modes, fuse bits, watchdog timer.
 

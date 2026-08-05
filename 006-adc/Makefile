@@ -15,7 +15,7 @@ CPPFLAGS = -Iinclude
 CFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU) -Os
 OBJFLAGS = -O ihex -R .eeprom
 
-SRC = src/main.c src/adc.c
+SRC = src/main.c src/usart.c src/helper.c
 OBJ = $(patsubst src/%.c,build/%.o,$(SRC))
 
 all: build/program.hex
@@ -33,7 +33,7 @@ flash: build/program.hex
 	$(AVRDUDE) -C $(CONF) -c arduino -p $(MCU) -P $(PORT) -b115200 -U flash:w:$<:i
 
 clean:
-	rm build/*
+	rm -rf build/*
 
 my_test: test/test.c src/helper.c
 	clang -g -Iinclude test/test.c src/helper.c -o build/outTest

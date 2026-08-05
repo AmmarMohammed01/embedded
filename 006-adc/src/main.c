@@ -6,6 +6,7 @@ Learning ADC
 #include <avr/io.h>
 
 #include <stdint.h> //uint16_t
+#include <util/delay.h>
 
 //#include "adc.h"
 #include "usart.h"
@@ -21,23 +22,57 @@ int main() {
 		 ~(1 << MUX3) | ~(1 << MUX2) | ~(1 << MUX1) | (1 << MUX0); //select ADC0 as input
 	*/
 	
+	/*
 	ADCSRA = (1 << ADEN) | // ADC enable
 		 (1 << ADSC);  // ADC start conversion
+	*/
 	// ADPS prescaler selector bits
+	ADCSRA = (1 << ADEN) | // ADC enable
+	//ADC Prescaler Bits -> Division Factor 128; 16,000,000 Hz / 128 = 125,000 Hz
+         (1 << ADPS2) |
+         (1 << ADPS1) |
+         (1 << ADPS0);
 
-	//
+	usart_init(MYUBRR);
+
 	while(1) {
 		//I think the data register can be called as ADC/ADCW for 16-bit or ADCL & ADCH for two 8-bit registers.
 		//ADC;
-		int arrSize = 4;
+		int arrSize = 5;
 		char adcString[arrSize];
-		//memset(adcString, 0, 4);
 
-		uint16_t adcValue = (ADCH << 8) | ADCL;
+		ADCSRA |= (1 << ADSC); // Start conversion
+		while (ADCSRA & (1 << ADSC)); // Wait until finished (page 218, start conversion bit turns to 0 once conversion complete). Reminds me of USART.
+		/*
+		// x 1 x x x x x x = ADCSRA
+		// 0 1 0 0 0 0 0 0 = (1 << ADSC)
+		// 0 1 0 0 0 0 0 0 = ADCSRA & (1 << ADSC) --> validates TRUE
 
-		intToString(adcValue, adcString, arrSize);
+		// x 0 x x x x x x = ADCSRA
+		// 0 1 0 0 0 0 0 0 = (1 << ADSC)
+		// 0 0 0 0 0 0 0 0 = ADCSRA & (1 << ADSC) --> validates FALSE
+		*/
 
-		usart_print();
+		//THIS FAILS SINCE ADCL MUST BE READ BEFORE ADCH
+		//uint16_t adcValue = (ADCH << 8) | ADCL;
+
+		//THIS WORKS: ADCL IS READ FIRST, ADCH IS READ SECOND (page 219)
+		uint8_t lowByte = ADCL;
+		uint8_t highByte = ADCH;
+		uint16_t adcValue = (highByte << 8) | lowByte;
+
+		//THIS WORKS
+		//uint16_t adcValue = ADC;
+
+		//TEST VALUES TO SEE IF USART_PRINT() IS WORKING
+		//uint16_t adcValue = 1023;
+		//uint16_t adcValue = 456;
+
+		intToString(adcValue, adcString);
+		reverseString(adcString);
+
+		usart_print(adcString);
+		_delay_ms(1000);
 	}
 
 	return 0;

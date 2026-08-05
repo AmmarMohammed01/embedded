@@ -18,6 +18,7 @@ Modified 2026-07-30: added usart_print()
 void usart_init(unsigned int ubrr);
 void usart_transmit(unsigned char data);
 unsigned char usart_receive(void);
-void usart_print(char* message, unsigned int msgLength);
+//void usart_print(char* message, unsigned int msgLength);
+void usart_print(char* message);
 
 #endif

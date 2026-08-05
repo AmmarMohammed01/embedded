@@ -1,5 +1,6 @@
 /*Ammar Mohammed, 2026-07-02, Learning USART
 Modified 2026-07-30: added usart_print()
+Modified 2026-08-05: changed usart_print() to avoid reliance on msg length
 */
 #include "usart.h"
 
@@ -28,9 +29,16 @@ unsigned char usart_receive(void) {
 }
 
 //Function that prints multiple characters at a time
-void usart_print(char* message, unsigned int msgLength) {
+//void usart_print(char* message, unsigned int msgLength) {
+void usart_print(char* message) {
+	/*
 	for (int i = 0; i < msgLength; i++) {
 		usart_transmit(message[i]);
+	}
+	*/
+	while(*message) { //terminates at '\0' b/c \0 is just 0x00 in mem.
+		usart_transmit(*message);
+		message++;
 	}
 	usart_transmit('\n');
 	usart_transmit('\r');
