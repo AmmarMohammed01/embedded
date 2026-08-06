@@ -9,16 +9,16 @@ Extra: Remember to use sei() from avr/interrupt.h and ISR(INT0_vect) and ISR(INT
 #include <avr/io.h>
 
 typedef enum {
-	LowLevel = 0, // better practice for enum value names: INTERRUPT_LOW_LEVEL, INTERRUPT_ANY_CHANGE, etc.
-	AnyChange = 1,
-	FallingEdge = 2,
-	RisingEdge = 3
+	INTERRUPT_LOW_LEVEL = 0,
+	INTERRUPT_ANY_CHANGE = 1,
+	INTERRUPT_FALLING_EDGE = 2,
+	INTERRUPT_RISING_EDGE = 3
 } SenseControl_t;
 
 typedef enum {
 	INTERRUPT0 = 0,
 	INTERRUPT1 = 1
-} Interrupt_t
+} Interrupt_t;
 
 void interrupt_init(Interrupt_t interruptNum, SenseControl_t senseControl);
 #endif
