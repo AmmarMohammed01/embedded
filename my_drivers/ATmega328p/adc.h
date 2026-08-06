@@ -36,7 +36,11 @@ typedef enum {
 	ADC_PS128 = 7,
 } ADC_Clock_Prescaler_t;
 
-void ADC_init(ADC_Vref_Select_t adcVoltMode, ADC_Adjust_Result_t adcAdjustSelect, ADC_Channel_t adcChannelNum, ADC_Clock_Prescaler_t adcPrescaler);
+void ADC_init(ADC_Clock_Prescaler_t prescaler);
+
+void ADC_setChannel(ADC_Channel_t channel);
+void ADC_setResultAdjust(ADC_Adjust_Result_t adjustMode);
+void ADC_setVoltageRef(ADC_Vref_Select_t vref);
 
 uint16_t ADC_read();
 

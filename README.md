@@ -36,6 +36,10 @@ Peripherals/Concepts explored: GPIO, UART, Interrupts, Timers, ADC.
 - 2026-07-30: Resume learning about ADC.
 - 2026-08-04/05: Successfully print ADC value.
 
+### my_drivers/ATmega328P
+- 2026-08-05: External Interrupt Driver.
+- 2026-08-06: ADC Driver V1 and V2.
+
 Potential future topics: I2C, SPI, Bootloader, sleep modes, fuse bits, watchdog timer.
 
 ## Project List - Other Projects
