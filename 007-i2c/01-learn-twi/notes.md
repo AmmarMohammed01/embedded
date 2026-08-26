@@ -189,4 +189,7 @@ Then:
 - "file avr-gcc: avr-gcc: Mach-O 64-bit executable x86_64"
 - Install Rosetta 2: /usr/sbin/softwareupdate --install-rosetta --agree-to-license
 
-- screen /dev/cu.usbmodem1101 9600
+- ```screen /dev/cu.usbmodem1101 9600```
+- ```CTRL+A K Y``` to close screen
+- ```CTRL+S``` to pause screen
+- ```CTRL+Q``` to resume screen

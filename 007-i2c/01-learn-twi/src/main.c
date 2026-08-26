@@ -2,9 +2,15 @@
 Ammar Mohammed
 2026-08-08
 Learn I2C, TWI.
+
+Next steps:
+- Make sure negative values are handled (2s complement)
+- Make sure celsius conversion is correct, or if there is a loss of data since float not used
+- Make a printf(), easier formatting
 */
 #include <avr/io.h>
 #include <stdint.h>
+#include <util/delay.h>
 
 #include "usart.h"
 #include "helper.h"
@@ -97,40 +103,54 @@ int main() {
 
 	usart_print("Sixth:");
 	intToString(status5, statusStr);
-	usart_print(statusStr); // EXPECT 80, GOT 88
+	usart_print(statusStr); //GOT 88
 
 	usart_print("Seventh:");
 	intToString(status6, statusStr);
-	usart_print(statusStr); // EXPECT 88, GOT 88
+	usart_print(statusStr); //GOT 88
 
 	//PRINT DATA
-	uint16_t tempData = ((uint16_t)msb << 8) | lsb;
+	uint16_t initialData = ((uint16_t)msb << 8) | lsb;
 
 	char msbStr[5];
 	intToString((uint16_t)msb, msbStr);
-	usart_print(msbStr); //THIRD READ ATTEMPT: 255
+	usart_print(msbStr);
 
 	char lsbStr[5];
 	intToString((uint16_t)lsb, lsbStr);
-	usart_print(lsbStr); //THIRD READ ATTEMPT: 255
+	usart_print(lsbStr);
 
 
 	char tempStr[10];
-	intToString(tempData, tempStr);
-	usart_print(tempStr); // THIRD READ ATTEMPT: 65535
+	intToString(initialData, tempStr);
+	usart_print(tempStr);
+
+	char celsiusStr[5];
+	char fahrenheitStr[5];
 
 	while(1) {
-		uint16_t newData = i2c_read_twobytes();
-		char tempStr[10];
-		intToString(newData, tempStr);
-		usart_print(tempStr); // FOURTH READ ATTEMPTS: 6304. 6304 >> 8 = 24C
+		uint16_t rawTempData = i2c_read_twobytes();
+		intToString(rawTempData, tempStr);
+		usart_print("Raw Data:");
+		usart_print(tempStr);
+
+		uint16_t celsius = rawTempData >> 8;
+		intToString(celsius, celsiusStr);
+		usart_print("Celsius:");
+		usart_print(celsiusStr);
+
+		float fahrenheit = ((float)celsius * 1.8) + 32;
+		intToString((uint16_t)fahrenheit, fahrenheitStr);
+		usart_print("Fahrenheit:");
+		usart_print(fahrenheitStr);
+
 		_delay_ms(1000);
 	}
 	return 0;
 }
 
-//Example output fouth read attempts:
 /*
+Output Results
 Start:
 8
 Second:
@@ -145,13 +165,25 @@ Sixth:
 80
 Seventh:
 88
-255
+255 //SDA is read HIGH both times because nothing is pulling signal to ground
 255
 65535
+Raw Data:
+6272
+Celsius:
+24
+Fahrenheit:
+75
+Raw Data:
+6272
+Celsius:
+24
+Fahrenheit:
+75
+Raw Data:
 6256
-6240
-6240
-6240
-6240
-6240
+Celsius:
+24
+Fahrenheit:
+75
 */
