@@ -182,3 +182,11 @@ Then:
 - MCU is receiver
 - TMP1075 is transmitter
 
+# 2026-08-25
+- Reset mac,
+- reinstalled Arduino IDE for AVR toolchain.
+- "avr-gcc: Bad CPU type in executable"
+- "file avr-gcc: avr-gcc: Mach-O 64-bit executable x86_64"
+- Install Rosetta 2: /usr/sbin/softwareupdate --install-rosetta --agree-to-license
+
+- screen /dev/cu.usbmodem1101 9600

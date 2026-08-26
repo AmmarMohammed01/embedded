@@ -1,19 +1,21 @@
 #include "helper.h"
 
-void intToString(uint16_t num, char * output) {
+void intToString(uint16_t num, char * strOfNum) {
 	int i = 0;
 	if(num == 0) {
-		output[0] = '0';
-		output[1] = '\0';
+		strOfNum[0] = '0';
+		strOfNum[1] = '\0';
 		return;
 	}
 	while(num != 0) {
 		//char currentDigit = (num % 10) + 48;
-		output[i] = (num % 10) + 48;
+		strOfNum[i] = (num % 10) + 48;
 		num /= 10;
 		i++;
 	}
-	output[i] = '\0';
+	strOfNum[i] = '\0';
+
+	reverseString(strOfNum);
 }
 
 void reverseString(char * str) {

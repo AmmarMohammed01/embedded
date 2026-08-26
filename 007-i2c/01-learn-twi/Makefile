@@ -5,7 +5,7 @@ TOOLCHAIN = ~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-
 CC =      $(TOOLCHAIN)/avr-gcc
 OBJCOPY = $(TOOLCHAIN)/avr-objcopy
 
-AVRDUDE_PATH = ~/Library/Arduino15/packages/arduino/tools/avrdude/6.3.0-arduino17
+AVRDUDE_PATH = ~/Library/Arduino15/packages/arduino/tools/avrdude/8.0.0-arduino1/
 AVRDUDE = $(AVRDUDE_PATH)/bin/avrdude
 CONF =    $(AVRDUDE_PATH)/etc/avrdude.conf
 

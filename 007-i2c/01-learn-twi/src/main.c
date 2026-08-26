@@ -33,7 +33,7 @@ int main() {
 	while(!(TWCR & (1 << TWINT))); //wait for status code that START is set
 
 	//read status code
-	uint8_t status = TWSR & 0xF8; //mask first 5 bits for status, last 3 bits as 0
+	uint8_t status0 = TWSR & 0xF8; //mask first 5 bits for status, last 3 bits as 0
 
 	uint8_t addressPacket = TMP1075_ADDR << 1; //0x48 << 1 = 0x90 (100 1000 << 1 = 1001 0000)
 	TWDR = addressPacket;
@@ -49,18 +49,15 @@ int main() {
 
 	char statusStr[5];
 	usart_print("Start:");
-	intToString(status, statusStr);
-	reverseString(statusStr);
+	intToString(status0, statusStr);
 	usart_print(statusStr); //prints out 8
 
 	usart_print("Second:");
 	intToString(status1, statusStr);
-	reverseString(statusStr);
 	usart_print(statusStr); //USED TO PRINT 32, now 24
 
 	usart_print("Third:");
 	intToString(status2, statusStr);
-	reverseString(statusStr);
 	usart_print(statusStr); //USED TO PRINT OUT 48, now 40
 
 	while(1) {
