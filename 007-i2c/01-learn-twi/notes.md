@@ -193,3 +193,106 @@ Then:
 - ```CTRL+A K Y``` to close screen
 - ```CTRL+S``` to pause screen
 - ```CTRL+Q``` to resume screen
+
+# 2026-08-26 Understanding 2s Complement of Raw Data
+Thinking about twos complement.
+So the data is 12-bits, but transferred data is 16 bits.
+The last Nibble is just 0000.
+
+```text
+7    F    F    0
+0111 1111 1111 0000
+```
+
+A number is negative in two's complement if the first bit is 1.
+
+Max possible num for TMP1075 is
+```text
+F    F    F    0
+1111 1111 1111 0000
+```
+
+Wait, I see a pattern.
+
+```text
+0000 0000 0100 0000
+0000 0000.0100
+0    0   .25
+```
+
+The first byte represents an integer,
+the nibble following it represents a decimal quantity.
+
+```text
+. 0    1    0    0
+  1/2  1/4  1/8  1/16
+  2^-1 2^-2 2^-3 2^-4
+```
+
+I need to learn how floating point numbers are stored in memory using C.
+I know uint8_t is a byte xxxx xxxx.
+
+On my laptop:
+```C
+sizeof(float) == 4 bytes
+```
+4 bytes = 32 bits
+```text
+0000 0000, 0000 0000, 0000 0000, 0000 0000
+```
+
+How is a float represented on ATmega328p?
+Will look into this after finding out desktop C representation.
+- man float
+
+Floating Point has 3 Parts
+- sign s
+- mantissa m (significand)
+- exponent e
+
+s*m*2**e
+
+IEEE Floating Point (My CE2310 Notes, Page 93).
+
+So I don't think TMP1075 is using IEEE Floating Point Notation.
+Just using binary numbers to represent fractions.
+
+So I understand TMP1075 Table 7-1 for numbers 0 and up.
+But, I am confused about decimal representation for numbers below 0.
+
+```text
+F    F    C    0
+1111 1111 1100 0000
+^ This is -0.25
+```
+
+Ok, I think I remember learning about converting a number to two's complement.
+1s complement - to get the negative version of a binary number,
+convert all the 0s to 1s
+convert all the 1s to 0s.
+
+2s complement is 1s complement, but you add 1 after the conversion.
+
+So 0.25 is
+```text
+0    0    4    0
+0000 0000.0100 0000
+```
+
+1s complement of 0.25
+```text
+0000 0000.0100 (0.25)
+1111 1111.1011 (0.25 1s complement)
+```
+
+2s complement of 0.25
+```text
+1111 1111.1011 (1s complement of 0.25)
++            1
+--------------
+1111 1111.1100 (2s complement of 0.25)
+```
+
+Now that I understand the 2s complement form of the data output:
+- Convert raw data to float
+- Support negative numbers
