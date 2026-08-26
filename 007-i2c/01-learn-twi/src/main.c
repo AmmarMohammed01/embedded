@@ -74,6 +74,32 @@ int main() {
 	intToString(status4, statusStr);
 	usart_print(statusStr); //64: SLA+R TRANSMITTED; ACK RECEIVED
 
+	//READ 1ST BYTE
+	uint16_t tempData = 0;
+	tempData = (TWDR << 8) | tempData;
+	TWCR = (1 << TWEN) | (1 << TWINT);
+	while(!(TWCR & (1 << TWINT)));
+	uint8_t status5 = TWSR & 0xF8;
+
+	//READ 2ND BYTE
+	tempData = tempData | TWDR;
+	TWCR = (1 << TWEN) | (1 << TWINT);
+	while(!(TWCR & (1 << TWINT)));
+	uint8_t status6 = TWSR & 0xF8;
+
+	usart_print("Sixth:");
+	intToString(status5, statusStr);
+	usart_print(statusStr); // EXPECT 80, GOT 88
+
+	usart_print("Seventh:");
+	intToString(status6, statusStr);
+	usart_print(statusStr); // EXPECT 88, GOT 88
+
+	//PRINT DATA
+	char tempStr[5];
+	intToString(tempData, tempStr);
+	usart_print(tempStr); // GOT 37,375 which is 91FFh, last digit should always be 0, so incorrect
+
 	while(1) {
 
 		/*
