@@ -15,7 +15,7 @@ CPPFLAGS = -Iinclude
 CFLAGS = -mmcu=$(MCU) -DF_CPU=$(F_CPU) -Os
 OBJFLAGS = -O ihex -R .eeprom
 
-SRC = src/main.c src/usart.c src/helper.c
+SRC = src/main.c src/usart.c src/helper.c src/my_i2c.c
 OBJ = $(patsubst src/%.c,build/%.o,$(SRC))
 
 all: build/program.hex

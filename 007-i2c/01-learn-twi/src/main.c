@@ -8,6 +8,7 @@ Learn I2C, TWI.
 
 #include "usart.h"
 #include "helper.h"
+#include "my_i2c.h"
 
 #define TMP1075_ADDR 0x48
 
@@ -75,17 +76,24 @@ int main() {
 	usart_print(statusStr); //64: SLA+R TRANSMITTED; ACK RECEIVED
 
 	//READ 1ST BYTE
-	uint16_t tempData = 0;
-	tempData = (TWDR << 8) | tempData;
-	TWCR = (1 << TWEN) | (1 << TWINT);
+	uint8_t msb, lsb;
+	TWCR = (1 << TWEN)
+	     | (1 << TWINT)
+	     | (1 << TWEA); //reason for ACK bit generation, we need to tell the TMP1075 that we got the byte and want more
 	while(!(TWCR & (1 << TWINT)));
 	uint8_t status5 = TWSR & 0xF8;
+	msb = TWDR;
 
 	//READ 2ND BYTE
-	tempData = tempData | TWDR;
 	TWCR = (1 << TWEN) | (1 << TWINT);
 	while(!(TWCR & (1 << TWINT)));
 	uint8_t status6 = TWSR & 0xF8;
+	lsb = TWDR;
+
+	// Finish the read and release the bus
+	TWCR = (1 << TWINT) |
+	       (1 << TWEN)  |
+	       (1 << TWSTO);
 
 	usart_print("Sixth:");
 	intToString(status5, statusStr);
@@ -96,29 +104,54 @@ int main() {
 	usart_print(statusStr); // EXPECT 88, GOT 88
 
 	//PRINT DATA
-	char tempStr[5];
+	uint16_t tempData = ((uint16_t)msb << 8) | lsb;
+
+	char msbStr[5];
+	intToString((uint16_t)msb, msbStr);
+	usart_print(msbStr); //THIRD READ ATTEMPT: 255
+
+	char lsbStr[5];
+	intToString((uint16_t)lsb, lsbStr);
+	usart_print(lsbStr); //THIRD READ ATTEMPT: 255
+
+
+	char tempStr[10];
 	intToString(tempData, tempStr);
-	usart_print(tempStr); // GOT 37,375 which is 91FFh, last digit should always be 0, so incorrect
+	usart_print(tempStr); // THIRD READ ATTEMPT: 65535
 
 	while(1) {
-
-		/*
-		uint16_t celsius = TWDR >> 8; //value in celsius
-		intToString();
-		usart_print();
-		*/
-
-		/*
-		//Send start condition
-		TWCR = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN);
-
-		while(!(TWCR & (1 << TWINT))); //wait for status code that START is set
-
-		if ((TWSR & 0xF8) != START)
-			ERROR(); // ?
-
-		TWDR = SLA_W;
-		*/
+		uint16_t newData = i2c_read_twobytes();
+		char tempStr[10];
+		intToString(newData, tempStr);
+		usart_print(tempStr); // FOURTH READ ATTEMPTS: 6304. 6304 >> 8 = 24C
+		_delay_ms(1000);
 	}
 	return 0;
 }
+
+//Example output fouth read attempts:
+/*
+Start:
+8
+Second:
+24
+Third:
+40
+Fourth:
+16
+Fifth:
+64
+Sixth:
+80
+Seventh:
+88
+255
+255
+65535
+6256
+6240
+6240
+6240
+6240
+6240
+*/
