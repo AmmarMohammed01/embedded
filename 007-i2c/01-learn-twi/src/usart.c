@@ -40,6 +40,6 @@ void usart_print(char* message) {
 		usart_transmit(*message);
 		message++;
 	}
-	usart_transmit('\n');
-	usart_transmit('\r');
+	//usart_transmit('\n');
+	//usart_transmit('\r');
 }
