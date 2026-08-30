@@ -64,6 +64,7 @@ int main() {
 	printf("Exponent Val: %d\n", exponentVal);
 
 	//MANTISSA is 23 bits, 1 in front implicit, could use 24-bits or 3 bytes
+	/*
 	char mantissa[3]; //3 bytes
 	mantissa[0] = bytes[2] & 0x7F; //if I want, I can add implicit 1 here
 	mantissa[1] = bytes[1];
@@ -80,6 +81,21 @@ int main() {
 	printf("\n");
 
 	mantissa[0] |= 0x80; //implicit 1
+	*/
+
+	//unsigned mantissa = (bytes[2] & 0x7F) | bytes[1] | bytes[0];
+	unsigned mantissa = (1 << 23) | ((bytes[2] & 0x7F) << 16) | (bytes[1] << 8) | bytes[0];
+	printf("Mantissa bits: ");
+	bytes = (unsigned char *) &mantissa;
+	for(int byte = sizeof(unsigned) - 1; byte >= 0; byte--) {
+		for(int bit = 7; bit >= 0; bit--) {
+			currentBit = bytes[byte] & (1 << bit) ? '1' : '0';
+			printf("%c", currentBit);
+		}
+		printf(" ");
+	}
+	printf("\n");
+
 	//somehow I need to left shfit mantissa by exponent amount
 	//10011011 00001100 10001111 ; this has implicit 1, if I left shift by exponent w/ implicit 1, I should add one to exponent
 	//1.0011011 00001100 10001111
@@ -92,13 +108,13 @@ int main() {
 
 	// I need to think of a good way to divide whole and fraction part of mantissa...
 	//wholeNum |= (uint32_t)mantissa; //can't cast char * to unsigned int, "smaller type" compiler warning
-	wholeNum = shift_first_bits((unsigned)mantissa, exponentVal);
-	fraction = mask_last_bits((unsigned)mantissa, exponentVal);
+	wholeNum = shift_first_bits((unsigned)mantissa, exponentVal+1);
+	fraction = mask_last_bits((unsigned)mantissa, 24-(exponentVal+1));
 	printf("Whole Num: %d\n", wholeNum);
 
 	//print whole num bits
 	bytes = (unsigned char *) &wholeNum;
-	for(int byte = sizeof(unsigned char) - 1; byte >= 0; byte--) {
+	for(int byte = sizeof(unsigned) - 1; byte >= 0; byte--) {
 		for(int bit = 7; bit >= 0; bit--) {
 			currentBit = bytes[byte] & (1 << bit) ? '1' : '0';
 			printf("%c", currentBit);
@@ -109,7 +125,7 @@ int main() {
 
 	printf("Fraction: %d\n", fraction);
 	bytes = (unsigned char *) &fraction;
-	for(int byte = sizeof(unsigned char) - 1; byte >= 0; byte--) {
+	for(int byte = sizeof(unsigned) - 1; byte >= 0; byte--) {
 		for(int bit = 7; bit >= 0; bit--) {
 			currentBit = bytes[byte] & (1 << bit) ? '1' : '0';
 			printf("%c", currentBit);
@@ -123,12 +139,12 @@ int main() {
 
 //what if exponent is negative?
 unsigned shift_first_bits(unsigned data, unsigned nBits) {
-	unsigned wholeNum;
-	wholeNum = data >> (24 - nBits + 1); //24 bits from mantissa plus implicit 1. nBits + 1 b/c implicit 1.
+	unsigned wholeNum = data >> (24 - nBits); //24 bits from mantissa plus implicit 1. nBits + 1 b/c implicit 1.
 	return wholeNum;
 }
 
 unsigned mask_last_bits(unsigned data, unsigned nBits) {
+	printf("nBits: %u\n", nBits);
 	unsigned maskedData = data & ((1u << nBits) - 1u);
 	return maskedData;
 }
