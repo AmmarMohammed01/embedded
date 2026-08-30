@@ -81,11 +81,14 @@ float tmp1075_raw_to_celsius(uint16_t rawData) {
 	float fractionSum = 0;
 	if(fraction & (1 << 3)) {
 		fractionSum += 0.5;
-	} else if (fraction & (1 << 2)) {
+	}
+	if (fraction & (1 << 2)) {
 		fractionSum += 0.25;
-	} else if (fraction & (1 << 1)) {
+	}
+	if (fraction & (1 << 1)) {
 		fractionSum += 0.125;
-	} else if (fraction & (1 << 0)) {
+	}
+	if (fraction & (1 << 0)) {
 		fractionSum += 0.0625;
 	}
 
@@ -104,6 +107,7 @@ void printBits(void * data, int numBytes) {
 }
 */
 
+/*
 void floatToStr(float num) {
 	//I know IEEE 754: 1-bit sign, 8-bit biased exponent, 23-bit mantissa (implicit 1)
 	//How to get a computer to convert to string? First think about what I need to do to convert it.
@@ -127,3 +131,4 @@ void floatToStr(float num) {
 	// Well first, I should probably divide the float into all its different parts.
 	
 }
+*/

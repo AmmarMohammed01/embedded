@@ -12,41 +12,29 @@ typedef struct TMP1075_Info {
 
 //float tmp1075_raw_to_celsius(uint16_t rawData);
 tmp1075_info_t tmp1075_raw_divide(uint16_t rawData);
+void printTemperature(tmp1075_info_t info);
 
 int main() {
-	char firstNum[5];
-	char secondNum[5];
-
 	tmp1075_info_t rinfoMain = tmp1075_raw_divide(0x7FF0);
-	if(rinfoMain.sign == 1) { printf("-"); }
-	intToString((uint16_t)rinfoMain.wholeNum, firstNum);
-	intToString(rinfoMain.fractionNum, secondNum);
-	printf("%s.%s'C\n", firstNum, secondNum);
+	printTemperature(rinfoMain);
 
 	rinfoMain = tmp1075_raw_divide(0x8000);
-	if(rinfoMain.sign == 1) { printf("-"); }
-	intToString((uint16_t)rinfoMain.wholeNum, firstNum);
-	intToString(rinfoMain.fractionNum, secondNum);
-	printf("%s.%s'C\n", firstNum, secondNum);
+	printTemperature(rinfoMain);
 
 	rinfoMain = tmp1075_raw_divide(0x0010);
-	if(rinfoMain.sign == 1) { printf("-"); }
-	intToString((uint16_t)rinfoMain.wholeNum, firstNum);
-	intToString(rinfoMain.fractionNum, secondNum);
-	//if(rinfoMain.fractionNum < 1000 && rinfoMain.fractionNum > 99) { printf("0"); }
-	printf("%s.%s'C\n", firstNum, secondNum);
+	printTemperature(rinfoMain);
 
 	rinfoMain = tmp1075_raw_divide(0x0020);
-	if(rinfoMain.sign == 1) { printf("-"); }
-	intToString((uint16_t)rinfoMain.wholeNum, firstNum);
-	intToString(rinfoMain.fractionNum, secondNum);
-	printf("%s.%s'C\n", firstNum, secondNum);
+	printTemperature(rinfoMain);
 
 	rinfoMain = tmp1075_raw_divide(0x0040);
-	if(rinfoMain.sign == 1) { printf("-"); }
-	intToString((uint16_t)rinfoMain.wholeNum, firstNum);
-	intToString(rinfoMain.fractionNum, secondNum);
-	printf("%s.%s'C\n", firstNum, secondNum);
+	printTemperature(rinfoMain);
+
+	rinfoMain = tmp1075_raw_divide(0x0080);
+	printTemperature(rinfoMain);
+
+	rinfoMain = tmp1075_raw_divide(0x0000);
+	printTemperature(rinfoMain);
 
 	return 0;
 }
@@ -118,7 +106,7 @@ tmp1075_info_t tmp1075_raw_divide(uint16_t rawData) {
 	}
 
 	uint16_t fractionDigits = fractionSum * 10000; //0.0625 * 10000 = 625, I need 0625 to print
-	printf("%u\n", fractionDigits);
+	//printf("%u\n", fractionDigits);
 
 	tmp1075_info_t rinfo1 = {
 		.sign = sign,
@@ -127,4 +115,16 @@ tmp1075_info_t tmp1075_raw_divide(uint16_t rawData) {
 	};
 
 	return rinfo1;
+}
+
+void printTemperature(tmp1075_info_t info) {
+	char firstNum[5];
+	char secondNum[5];
+
+	if(info.sign == 1) { printf("-"); }
+	intToString((uint16_t)info.wholeNum, firstNum);
+	intToString(info.fractionNum, secondNum);
+	printf("%s.", firstNum);
+	if(info.fractionNum < 1000 && info.fractionNum > 99) { printf("0"); }
+	printf("%s'C\n", secondNum);
 }
