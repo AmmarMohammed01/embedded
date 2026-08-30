@@ -15,6 +15,7 @@ Next steps:
 #include "usart.h"
 #include "helper.h"
 #include "my_i2c.h"
+#include "tmp1075_helper.h"
 
 #define TMP1075_ADDR 0x48
 
@@ -97,6 +98,7 @@ int main() {
 		usart_print(tempStr);
 		usart_print(", ");
 
+		/*
 		float celsius = tmp1075_raw_to_celsius(rawTempData);
 		intToString((uint16_t)celsius, celsiusStr);
 		usart_print(celsiusStr);
@@ -106,8 +108,37 @@ int main() {
 		intToString((uint16_t)fahrenheit, fahrenheitStr);
 		usart_print(fahrenheitStr);
 		usart_print("'F\n\r");
+		*/
+		tmp1075_info_t info = tmp1075_raw_divide(rawTempData);	
+		printTemperature(info);
 
 		_delay_ms(1000);
 	}
 	return 0;
 }
+
+/*
+ * Previous Output
+25
+32
+6432
+Raw Data: 6432, 25'C, 77'F
+Raw Data: 6432, 25'C, 77'F
+Raw Data: 6432, 25'C, 77'F
+Raw Data: 6432, 25'C, 77'F
+Raw Data: 6432, 25'C, 77'F
+ *
+ * Current Output
+25
+32
+6432
+Raw Data: 6432, 25.1250'C
+Raw Data: 6432, 25.1250'C
+Raw Data: 6432, 25.1250'C
+Raw Data: 6416, 25.0625'C
+Raw Data: 6432, 25.1250'C
+Raw Data: 6416, 25.0625'C
+Raw Data: 6432, 25.1250'C
+Raw Data: 6432, 25.1250'C
+Raw Data: 6432, 25.1250'C
+ * */
