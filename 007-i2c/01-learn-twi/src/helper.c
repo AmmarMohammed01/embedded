@@ -93,3 +93,37 @@ float tmp1075_raw_to_celsius(uint16_t rawData) {
 	celsius *= sign;
 	return celsius;
 }
+
+/*
+void printBits(void * data, int numBytes) {
+	for(int i = (numBytes*8)-1; i >= 0; i--) {
+		if(data & (1 << i)) {
+			
+		}
+	}
+}
+*/
+
+void floatToStr(float num) {
+	//I know IEEE 754: 1-bit sign, 8-bit biased exponent, 23-bit mantissa (implicit 1)
+	//How to get a computer to convert to string? First think about what I need to do to convert it.
+	//Start w/ a num 4321.56: 01000101 10000111 00001100 01111011
+	
+	//Should string have negative sign? 1st bit
+	uint8_t isNegative = 0;
+	if(num & (1 << 31)) { //pretty sure that float doesn't support bit operations
+		isNegative = 1;
+		//add char '-' to str
+	}
+
+	//biased exponent
+	// 1000 1011 is 1 + 2 + 8 + 128 = 139
+	// 139 - 127 = 12 <- the exponent of 2 to multiply with binary num
+	// (1 << 12) = 2^12. Shift 12 digits in front of decimal (or maybe better, fraction) point
+
+	//manitssa 23-bit
+	// 0000111 00001100 01111011, 7-bits followed by byte
+	// How to put the implicit "1." in front? Can I take the first byte and OR (1 << 7)
+	// Well first, I should probably divide the float into all its different parts.
+	
+}
