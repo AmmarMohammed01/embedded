@@ -23,3 +23,6 @@ a.out
 
 # Hidden
 hidden
+
+# for clangd lsp
+compile_flags.txt
