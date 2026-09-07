@@ -132,3 +132,43 @@ void floatToStr(float num) {
 	
 }
 */
+
+float tmp1075_raw_to_fahrenheit(uint16_t rawData) {
+	uint8_t magnitude;
+	uint8_t fraction;
+	rawData = rawData >> 4;
+
+	float sign = 1;
+	if(rawData & 0x0800) { // or (rawData & (1 << 11)), which is better to show masking?
+		sign = -1;
+
+		rawData -= 1;
+		rawData = ~rawData;
+	}
+	
+	magnitude = (uint8_t)((rawData & 0x0FF0) >> 4);
+	fraction = (uint8_t)(rawData & 0x000F);
+
+	float celsius = (float)magnitude;
+	
+	float fractionSum = 0;
+	if(fraction & (1 << 3)) {
+		fractionSum += 0.5;
+	}
+	if (fraction & (1 << 2)) {
+		fractionSum += 0.25;
+	}
+	if (fraction & (1 << 1)) {
+		fractionSum += 0.125;
+	}
+	if (fraction & (1 << 0)) {
+		fractionSum += 0.0625;
+	}
+
+	celsius += fractionSum;
+	celsius *= sign;
+	//return celsius;
+
+	float fahrenheit = ((float)celsius * 1.8) + 32;
+	return fahrenheit;
+}

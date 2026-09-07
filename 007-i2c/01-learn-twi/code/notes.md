@@ -296,3 +296,23 @@ So 0.25 is
 Now that I understand the 2s complement form of the data output:
 - Convert raw data to float
 - Support negative numbers
+
+# 2026-09-07
+S 15:29
+I have recently learned that avr-gcc includes stdlib.
+The library include the atof() which can be used to convert strings to floating point numbers.
+
+However, the problem I was trying to tackle the last time I was working
+on this project was converting floating point to strings.
+
+~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/avr/include/stdio.h
+~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/avr/include/stdlib.h
+
+I think instead of source code, the directory includes the library file (.a stands for archive - static library).
+.a files usually contain .o files bundled together.
+~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/avr/lib/libc.a
+~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/avr/lib/libprintf_flt.a
+
+How does printf(), sprintf(), or snprintf() work on ATmega328p UART?
+Will it work with the screen command I currently use?
+E 15:38
