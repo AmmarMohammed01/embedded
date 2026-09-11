@@ -26,3 +26,5 @@ hidden
 
 # for clangd lsp
 compile_flags.txt
+
+007-i2c/01-learn-twi/schematic/tmp1075_i2c_kicad/.history/
