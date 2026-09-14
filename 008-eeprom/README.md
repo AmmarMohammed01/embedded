@@ -1,7 +1,7 @@
 # Learning EEPROM
-Date: 2026-09-10
+## Date: 2026-09-10
 
-## Process
+### Process
 
 ```bash
 mkdir 008-eeprom
@@ -49,3 +49,99 @@ I was planning to use:
 Finished writing eeprom.c driver. Next, write application code to interact with EEPROM.
 - Example: LED and button to remember LED_STATE (on, off) when Arduino reboots.
 - Example: Remember color of RGB LED. Button to cycle between (Red, green, blue)
+
+For the LED, I will just write a simple led.c driver.
+- I remember GPIO uses the PORTx and DDRx for output.
+- Look at the Arduino Uno R3 circuit schematic for pin numbers
+    - I want to control pin 13: IO13 is PB5
+- Look at ATmega328p datasheet to refresh memory on how to use the registers
+    - Section 13 I/O Ports (p. 58) > 13.4 Register Description (p. 72)
+    - Going off of memory, PORT sets input/output. DDR sets ON/OFF when output. (Nope, it is the other way around)
+
+---
+
+What does debounce mean?
+- "To remove the small ripple of current that forms when a mechanical switch is pushed in an electrical circuit and makes a series of short contacts" (Wiktionary, Creative Commons Attribution/Share-Alike License)
+
+What does depress mean?
+- To press down. (The American Heritage® Dictionary of the English Language, 5th Edition)
+- To push downwards or inwards.
+- The "de-" prefix doesn't mean undo here.
+- Opposite of depress would be to "release the pushbutton"
+
+How to debounce a pushbutton
+- https://docs.arduino.cc/built-in-examples/digital/Debounce/
+- In the example, they use millis(). How does millis() work?
+    - My guess: increment a global variable every clock cycle whenever the counter increments. The counter and variable start at 0.
+    - The variable is an unsigned long
+- Implementation: ~/Library/Arduino15/packages/arduino/hardware/avr/1.8.8/cores/arduino/wiring.c
+    - volatile unsgined long
+    - Oh so they do use an interrupt for their timer. An overflow ISR is used.
+- Earlier I was reading the AVR _delay_ms() implementation:
+    - ~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/avr/include/util/delay.h
+    - ~/Library/Arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7/avr/include/util/delay_basic.h
+
+Idea I would like to try w/ an oscilliscope:
+- Depress a button and observe how long the button input is unstable
+- Use the result to understand how long the debounce delay should typically be
+
+## DATE 2026-09-13
+
+### Toggle an LED
+How to toggle an LED?
+
+Normal button setup:
+```c
+if (buttonState == HIGH) {
+    LED_ON();
+}
+
+else if (buttonState == LOW) {
+    LED_OFF();
+}
+```
+
+The above doesn't really need a microcontroller. It can be done with circuitry.
+
+An action is being defined for when a button is depressed and when a button is released.
+
+Toggle an LED:
+```c
+if (buttonState == HIGH) {
+    LED_TOGGLE(); // use the ^ (toggle) bit operator to change pin output state
+}
+```
+
+^ just define the behavior for when the button is depressed.
+
+No behavior should exist for when the button is released.
+
+```c
+if (buttonState == HIGH) {
+    if (LED_state == ON) {
+        LED_state = OFF;
+    }
+    else {
+        LED_state = ON;
+    }
+}
+```
+
+The above implementation controls a variable rather than directly changing the pin output connecting to the LED.
+
+Perhaps the first solution is cleaner and concise.
+
+### Implement timer to debounce button
+
+How would one debounce a button connected to an interrupt?
+
+Have I debounced a button in bare-metal programming before?
+- I believe I have debounced a button in Arduino Framework
+- I have seen that in my very early code after button input read as HIGH:
+    - I would increment a counter,
+    - and use a blocking delay (this was my way of preventing back-to-back button inputs
+        - Apparently, my professor did something similar in his example too
+- Another method to debounce:
+    - record time of when the button is previously read
+    - see if 50ms has passed
+    - accept another input
