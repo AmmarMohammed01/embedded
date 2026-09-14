@@ -1,5 +1,5 @@
 /*
-File: interrupt.c
+File: external_interrupt.h
 Info: Ammar Mohammed 2026-08-05
 Purpose: Initialize/setup external interrupts on ATmega328p
 Extra: Remember to use sei() from avr/interrupt.h and ISR(INT0_vect) and ISR(INT1_vect) in main.c.
