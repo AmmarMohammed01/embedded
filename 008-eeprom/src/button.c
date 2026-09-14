@@ -6,5 +6,5 @@ void button_init() {
 
 uint8_t button_read() {
 	uint8_t button_state = PINB & (1 << PINB3);
-	return button_state;	
+	return button_state;
 }

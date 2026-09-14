@@ -1,7 +1,7 @@
 #include "led.h"
 
 void led_init() {
-	DDRB |= (1 << DDB5); //output PB5
+	DDRB |= (1 << DDB5); //output PB5 a.k.a. IO13
 }
 
 void led_on() {
